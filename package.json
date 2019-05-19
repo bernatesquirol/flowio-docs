@@ -1,20 +1,28 @@
 {
-  "name": "flowio-docs",
-  "version": "0.0.0",
-  "license": "MIT",
+  "name": "electron-quick-start",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
   "scripts": {
-    "dev": "electron-webpack dev",
-    "compile": "electron-webpack",
-    "dist": "yarn compile && electron-builder",
-    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+    "start": "electron .",
+    "release": " npx electron-builder build"
+
   },
-  "dependencies": {
-    "source-map-support": "^0.5.10"
-  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "4.0.1",
-    "electron-builder": "20.38.4",
-    "electron-webpack": "^2.6.2",
-    "webpack": "4.28.4"
+    "electron": "^5.0.0",
+    "electron-builder": "^20.40.2"
+  },
+  "build": {
+    "appId": "com.example.app"
   }
 }
