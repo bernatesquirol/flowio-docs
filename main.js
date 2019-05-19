@@ -20,20 +20,22 @@ const createSidebar=(file_path)=>{
   }
   
 }
+
 const printSidebar=(sidebar,deep=1)=>{
   //console.log(sidebar)
-  if (typeof sidebar === 'string') {return "-  "+sidebar+"("+sidebar+")"}
+  if (typeof sidebar === 'string' && sidebar[0]=='_') return ''
+  if (typeof sidebar === 'string') {return "-  ["+sidebar+"]("+sidebar+")"}
   let key = Object.keys(sidebar)[0]
   //console.log(key,Array.isArray(sidebar[key]))
   let final_tema = sidebar[key].map((value)=>printSidebar(value, deep+1))
   //console.log(final_tema)
   let prefix ='\n'+'  '.repeat(deep)
-  return key+prefix+(final_tema.join(separador=prefix))
+  return "- "+key+prefix+(final_tema.join(separador=prefix))
 }
+
+
+
 function createWindow () {
-  let path_flowio = 'C:\\Users\\bernat\\PDU\\diagrames'
-  let sidebar = createSidebar(path_flowio)
-  console.log(printSidebar(sidebar))
   
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -43,15 +45,22 @@ function createWindow () {
       nodeIntegration: true
     }
   })
-  
-  // and load the index.html of the app.
-  mainWindow.loadFile('index.html',{
-    query:{
-      'name':'',
-      'repo':'',
-      'basePath':'/'+path_flowio.split(path.sep).join('/')
-    }
+
+  let path_flowio = 'C:\\Users\\bernat\\PDU\\diagrames\\docs'
+  let sidebar = createSidebar(path_flowio)
+  let sidebar_text = printSidebar(sidebar)
+  fs.writeFile(path.join(path_flowio,'_sidebar.md'),sidebar_text,()=>{
+    mainWindow.loadFile('index.html',{
+      query:{
+        loadSidebar: '_sidebar.md',
+        name:'',
+        repo:'',
+        basePath:'/'+path_flowio.split(path.sep).join('/')
+      }
+    })
   })
+  // and load the index.html of the app.
+  
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
   
