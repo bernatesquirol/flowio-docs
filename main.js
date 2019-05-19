@@ -1,11 +1,40 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
-
+const fs = require('fs')
+const path = require('path')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
-
+const createSidebar=(file_path)=>{
+  let name_of_file = file_path.match(/(?:[^\/\\](?!(\/|\\)))+$/gim)
+  if (name_of_file==null) {name_of_file = "./"}
+  else name_of_file = name_of_file[0]
+  if(fs.lstatSync(file_path).isFile() && path.basename(file_path).slice(-3)=='.md'){
+    return name_of_file
+  }else if(fs.lstatSync(file_path).isDirectory()) {
+    let files = fs.readdirSync(file_path)
+    let return_obj = {}
+    return_obj[name_of_file]=files.map((file)=>createSidebar(path.join(file_path, file))).filter((a)=>a!=null)
+    if(return_obj[name_of_file].length==0) return null
+    return return_obj
+  }
+  
+}
+const printSidebar=(sidebar,deep=1)=>{
+  //console.log(sidebar)
+  if (typeof sidebar === 'string') {return "-  "+sidebar+"("+sidebar+")"}
+  let key = Object.keys(sidebar)[0]
+  //console.log(key,Array.isArray(sidebar[key]))
+  let final_tema = sidebar[key].map((value)=>printSidebar(value, deep+1))
+  //console.log(final_tema)
+  let prefix ='\n'+'  '.repeat(deep)
+  return key+prefix+(final_tema.join(separador=prefix))
+}
 function createWindow () {
+  let path_flowio = 'C:\\Users\\bernat\\PDU\\diagrames'
+  let sidebar = createSidebar(path_flowio)
+  console.log(printSidebar(sidebar))
+  
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1400,
@@ -14,13 +43,18 @@ function createWindow () {
       nodeIntegration: true
     }
   })
-
+  
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
-
+  mainWindow.loadFile('index.html',{
+    query:{
+      'name':'',
+      'repo':'',
+      'basePath':'/'+path_flowio.split(path.sep).join('/')
+    }
+  })
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
-
+  
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
