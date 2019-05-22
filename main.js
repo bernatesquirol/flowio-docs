@@ -18,7 +18,7 @@ const createSidebar=(file_path)=>{
     if(return_obj[name_of_file].length==0) return null
     return return_obj
   }
-  
+
 }
 
 const printSidebar=(sidebar,deep=1)=>{
@@ -33,10 +33,23 @@ const printSidebar=(sidebar,deep=1)=>{
   return "- "+key+prefix+(final_tema.join(separador=prefix))
 }
 
+function getUserParams(must_query={}){
+	let path_url_params = path.join(app.getPath('userData'),'urlParams.json')
+	if(!fs.existsSync(path_url_params)){
+		fs.writeFileSync(path_url_params,'{}')
+		console.log('Written default user params')
+    return {}
+	}else{
+		urlparams = fs.readFileSync(path_url_params,'utf8')
+		return JSON.parse(urlparams)
+	}
+	//if(!query['clibs']) query['clibs']=[]
+	//if(!Array.isArray(query['clibs'])) query['clibs']=[query['clibs']]
+}
 
 
 function createWindow () {
-  
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1400,
@@ -45,8 +58,8 @@ function createWindow () {
       nodeIntegration: true
     }
   })
-
-  let path_flowio = 'C:\\Users\\bernat\\PDU\\diagrames\\docs'
+  console.log(getUserParams()['path_flowio'])
+  let path_flowio = getUserParams()['path_flowio']?getUserParams()['path_flowio']:'C:\\Users\\besquirol\\PDU\\diagrames\\_docs'
   let sidebar = createSidebar(path_flowio)
   let sidebar_text = printSidebar(sidebar)
   fs.writeFile(path.join(path_flowio,'_sidebar.md'),sidebar_text,()=>{
@@ -60,10 +73,10 @@ function createWindow () {
     })
   })
   // and load the index.html of the app.
-  
+
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
-  
+
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows

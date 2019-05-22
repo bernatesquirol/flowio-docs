@@ -6,7 +6,6 @@
   "scripts": {
     "start": "electron .",
     "release": " npx electron-builder build"
-
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
