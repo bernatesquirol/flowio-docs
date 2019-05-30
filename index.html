@@ -35,8 +35,44 @@
     var query = window.location.search.substring(1);
     var docsify_config = parse_query_string(query)
     console.log(docsify_config['basePath'])
-    window.$docsify = docsify_config
+    window.$docsify = {
+      ...docsify_config,
+      markdown: {
+        renderer: {
+          html:function(html) {
+            console.log('RENDERING!!!')
+            console.log(html.replace('<iframe','<iframe onload="onIframeLoad"'))
+            // ...
+        
+            return html//html.replace('<iframe','<iframe onload="onIframeLoad()"')
+          }
+        }
+      }
+    }
   </script>
+  
+<script>
+    const onIframeLoad = function(a,b,c){
+      console.log('LOADING IFRAME')
+      function setUserAgent(window, userAgent) {
+        if (window.navigator.userAgent != userAgent) {
+          var userAgentProp = { get: function () { return userAgent; } };
+          try {
+            Object.defineProperty(window.navigator, 'userAgent', userAgentProp);
+          } catch (e) {
+            window.navigator = Object.create(navigator, {
+                userAgent: userAgentProp
+            });
+          }
+        }
+      }
+      console.log('carregant la cosa')
+      
+      setUserAgent(document.querySelector('iframe').contentWindow,'Aakash Chakravarthy Mobile Agent')
+    }
+</script>
   <script src="./docsify.min.js"></script>
+  <script src="./viewer.min.js"></script>
+  
 </body>
 </html>

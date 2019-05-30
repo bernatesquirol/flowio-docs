@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, BrowserView} = require('electron')
 const fs = require('fs')
 const path = require('path')
 // Keep a global reference of the window object, if you don't, the window will
@@ -39,23 +39,26 @@ function createWindow () {
   
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1400,
-    height: 1000,
+    frame: true,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      webSecurity:false
     }
   })
-
-  let path_flowio = 'C:\\Users\\bernat\\PDU\\diagrames\\docs'
+  mainWindow.maximize()
+  let path_flowio = 'C:\\Users\\bernat\\PDU\\diagrames\\_docs'
   let sidebar = createSidebar(path_flowio)
   let sidebar_text = printSidebar(sidebar)
+  mainWindow.webContents.setUserAgent('chrome/73.0.3683.121')
   fs.writeFile(path.join(path_flowio,'_sidebar.md'),sidebar_text,()=>{
+    mainWindow.webContents.setUserAgent('chrome/73.0.3683.121')
     mainWindow.loadFile('index.html',{
       query:{
         loadSidebar: '_sidebar.md',
         name:'',
         repo:'',
-        basePath:'/'+path_flowio.split(path.sep).join('/')
+        basePath:'/'+path_flowio.split(path.sep).join('/'),
+        
       }
     })
   })
@@ -63,7 +66,14 @@ function createWindow () {
   
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
-  
+ /* let view = new BrowserView()
+  mainWindow.setBrowserView(view)
+  view.setBounds({ x: 0, y: 0, width: 300, height: 300 })
+ view.webContents.loadURL('https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Untitled%20Diagram.drawio#RrZNbb4MgFIB%2FjY9LRLJeXuu6W7Inm%2BxxIXIqJCgGcWh%2F%2FXCAlzVN16QvhvNxgHM%2BMMJp2b0oUrMPSUFESUy7CD9FSbJZI%2FsdQO%2FAY5w4UChOHUITyPgJPIw9bTmFZpGopRSa10uYy6qCXC8YUUqaZdpRiuWpNSngDGQ5Eef0k1PNfFvJeuKvwAsWTkarrZspSUj2nTSMUGlmCO8jnCoptRuVXQpicBe8uHXPF2bHwhRU%2Bj8LyOHdrA4Vpibdv7Wnzdc2Kx78Lt9EtL5hX6zugwHDuIasJvkQG3vJEd4xXQobITskTe28H3kH9qid3xGUhu5iqWgUYB8OyBK06m1KWBCc9eEx%2BNjMrsAjNrMfGPGXXow7T17swKu5QVNyXZNWnFTFEO2uGLuHIPxHEDoXtLqPIBtOb%2FR3bvaj4%2F0P')*/
+  mainWindow.webContents.on('dom-ready',()=>{
+    
+    //mainWindow.webContents.executeJavaScript('console.log("jeee",navigator.getUserAgent())')
+  })
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
