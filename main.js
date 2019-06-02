@@ -2,6 +2,7 @@
 const {app, BrowserWindow, BrowserView} = require('electron')
 const fs = require('fs')
 const path = require('path')
+app.setPath('userData',path.join(app.getPath('appData'),'flowio'))
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -58,23 +59,27 @@ function createWindow () {
       webSecurity:false
     }
   })
-  console.log(getUserParams()['path_flowio'])
-  let path_flowio = getUserParams()['path_flowio']?getUserParams()['path_flowio']:'C:\\Users\\besquirol\\PDU\\diagrames\\_docs'
-  let sidebar = createSidebar(path_flowio)
-  let sidebar_text = printSidebar(sidebar)
-  mainWindow.webContents.setUserAgent('chrome/73.0.3683.121')
-  fs.writeFile(path.join(path_flowio,'_sidebar.md'),sidebar_text,()=>{
+  //console.log(getUserParams()['flowio_path'])
+  let path_flowio = getUserParams()['flowio_path']//?getUserParams()['path_flowio']:'C:\\Users\\besquirol\\PDU\\diagrames\\_docs'
+  if (path_flowio){
+    let sidebar = createSidebar(path_flowio)
+    let sidebar_text = printSidebar(sidebar)
+    let docs_path = path.join(path_flowio,'_docs')
     mainWindow.webContents.setUserAgent('chrome/73.0.3683.121')
-    mainWindow.loadFile('index.html',{
-      query:{
-        loadSidebar: '_sidebar.md',
-        name:'',
-        repo:'',
-        basePath:'/'+path_flowio.split(path.sep).join('/'),
-        
-      }
+    fs.writeFile(path.join(docs_path,'_sidebar.md'),sidebar_text,()=>{
+      mainWindow.webContents.setUserAgent('chrome/73.0.3683.121')
+      mainWindow.loadFile('index.html',{
+        query:{
+          loadSidebar: '_sidebar.md',
+          name:'',
+          repo:'',
+          basePath:'/'+docs_path.split(path.sep).join('/'),
+          
+        }
+      })
     })
-  })
+  }
+  
   // and load the index.html of the app.
 
   // Open the DevTools.
