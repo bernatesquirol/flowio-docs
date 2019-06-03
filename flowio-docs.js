@@ -1,3 +1,5 @@
+const path = require('path')
+const fs = require('fs')
 const createSidebar=(file_path)=>{
     let name_of_file = file_path.match(/(?:[^\/\\](?!(\/|\\)))+$/gim)
     if (name_of_file==null) {name_of_file = "./"}
