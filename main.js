@@ -20,26 +20,39 @@ function createWindow () {
       webSecurity:false
     }
   })
+  
   //console.log(getUserParams()['flowio_path'])
   let path_flowio = temp_flowio.getUserParams(app.getPath('userData'))['flowio_path']//?getUserParams()['path_flowio']:'C:\\Users\\besquirol\\PDU\\diagrames\\_docs'
   if (path_flowio){
-    let sidebar = temp_flowio.createSidebar(path_flowio)
-    let sidebar_text = temp_flowio.printSidebar(sidebar)
-    let docs_path = path.join(path_flowio,'_docs')
-    mainWindow.webContents.setUserAgent('chrome/73.0.3683.121')
-    fs.writeFile(path.join(docs_path,'_sidebar.md'),sidebar_text,()=>{
+    flowio.createFileIndex(path_flowio).then((index)=>{
+      let docs_path = path.join(path_flowio,'_docs')
+      let phantom_sidebar = temp_flowio.createSidebar(path_flowio)
+      console.log(JSON.stringify(phantom_sidebar))
+      /*let sidebar_text = temp_flowio.printSidebar(sidebar)
+      console.log(sidebar_text)*/
+      temp_flowio.createDocumentation(index,path_flowio,path_flowio, phantom_sidebar)
+
+      //console.log(JSON.stringify(sidebar,null,1))
+      
       mainWindow.webContents.setUserAgent('chrome/73.0.3683.121')
-      mainWindow.loadFile('index.html',{
-        query:{
-          loadSidebar: '_sidebar.md',
-          name:'',
-          repo:'',
-          basePath:'/'+docs_path.split(path.sep).join('/'),
-          
-        }
+      //fs.writeFile(path.join(docs_path,'_sidebar.md'),sidebar_text,
+      temp_flowio.createDocumentation(index,path_flowio,path_flowio, phantom_sidebar).then(()=>{
+        console.log('NOEE!')
+        mainWindow.webContents.setUserAgent('chrome/73.0.3683.121')
+        mainWindow.loadFile('index.html',{
+          query:{
+            loadSidebar: '_sidebar.md',
+            name:'',
+            repo:'',
+            basePath:'/'+docs_path.split(path.sep).join('/'),
+            
+          }
+        })
       })
     })
   }
+    
+    
   
   // and load the index.html of the app.
 

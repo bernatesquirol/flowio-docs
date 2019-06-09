@@ -37,6 +37,7 @@
     console.log(docsify_config['basePath'])
     window.$docsify = {
       ...docsify_config,
+      executeScript: true,
       markdown: {
         renderer: {
           html:function(html) {
@@ -73,6 +74,8 @@
 </script>
   <script src="./docsify.min.js"></script>
   <script src="./viewer.min.js"></script>
-  
+  <script type="text/javascript" src="https://www.draw.io/js/viewer.min.js"></script>
+  <script src="//unpkg.com/docsify/lib/plugins/external-script.min.js"></script>
+
 </body>
 </html>
