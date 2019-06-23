@@ -15,6 +15,8 @@ function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     frame: true,
+    width: 1600,
+		height: 1200,
     webPreferences: {
       nodeIntegration: true,
       webSecurity:false
@@ -57,7 +59,7 @@ function createWindow () {
   // and load the index.html of the app.
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
  /* let view = new BrowserView()
   mainWindow.setBrowserView(view)
   view.setBounds({ x: 0, y: 0, width: 300, height: 300 })
