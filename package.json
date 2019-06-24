@@ -24,9 +24,5 @@
   "build": {
     "appId": "com.example.app"
   },
-  "dependencies": {
-    "lodash": "^4.17.11",
-    "pako": "^1.0.10",
-    "xml2js": "^0.4.19"
-  }
+  "dependencies": {}
 }

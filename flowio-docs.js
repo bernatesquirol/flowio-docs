@@ -1,8 +1,7 @@
 const fs = require('fs')
 const path = require('path')
-const flowio = require('./flowio/flowio')
-const drawionode = require('./flowio/drawio-node')
-const _ = require('lodash');
+const flowio = require('./flowio-core/flowio')
+const drawionode = require('./flowio-core/drawio-node')
 String.prototype.replaceAll = function(search, replacement) {
 	var target = this;
 	return target.replace(new RegExp(search, 'g'), replacement);
