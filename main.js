@@ -2,8 +2,12 @@
 const {app, BrowserWindow, BrowserView} = require('electron')
 const fs = require('fs')
 const path = require('path')
-const flowio = require('./flowio/flowio')
-const temp_flowio = require('./flowio-docs')
+const flowio = require('./flowio-core/flowio')
+const flowio_docs = require('./flowio-docs')
+
+const PATH_APP_NODE_MODULES = path.join(__dirname, 'flowio-core', 'node_modules')
+console.log(PATH_APP_NODE_MODULES)
+require('module').globalPaths.push(PATH_APP_NODE_MODULES)
 app.setPath('userData',path.join(app.getPath('appData'),'flowio'))
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -24,22 +28,20 @@ function createWindow () {
   })
   
   //console.log(getUserParams()['flowio_path'])
-  let path_flowio = temp_flowio.getUserParams(app.getPath('userData'))['flowio_path']//?getUserParams()['path_flowio']:'C:\\Users\\besquirol\\PDU\\diagrames\\_docs'
+  let path_flowio = flowio_docs.getUserParams(app.getPath('userData'))['flowio_path']//?getUserParams()['path_flowio']:'C:\\Users\\besquirol\\PDU\\diagrames\\_docs'
   if (path_flowio){
     flowio.createFileIndex(path_flowio).then((index)=>{
       let docs_path = path.join(path_flowio,'_docs')
-      let phantom_sidebar = temp_flowio.createSidebar(path_flowio)
-      console.log(JSON.stringify(phantom_sidebar))
-      /*let sidebar_text = temp_flowio.printSidebar(sidebar)
+      let phantom_sidebar = flowio_docs.createSidebar(path_flowio)
+      /*let sidebar_text = flowio_docs.printSidebar(sidebar)
       console.log(sidebar_text)*/
-      temp_flowio.createDocumentation(index,path_flowio,path_flowio, phantom_sidebar)
+      flowio_docs.createDocumentation(index,path_flowio,path_flowio, phantom_sidebar)
 
       //console.log(JSON.stringify(sidebar,null,1))
       
       mainWindow.webContents.setUserAgent('chrome/73.0.3683.121')
       //fs.writeFile(path.join(docs_path,'_sidebar.md'),sidebar_text,
-      temp_flowio.createDocumentation(index,path_flowio,path_flowio, phantom_sidebar).then(()=>{
-        console.log('NOEE!')
+      flowio_docs.createDocumentation(index,path_flowio,path_flowio, phantom_sidebar).then(()=>{
         mainWindow.webContents.setUserAgent('chrome/73.0.3683.121')
         mainWindow.loadFile('index.html',{
           query:{

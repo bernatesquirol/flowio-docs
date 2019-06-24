@@ -6,6 +6,30 @@ String.prototype.replaceAll = function(search, replacement) {
 	var target = this;
 	return target.replace(new RegExp(search, 'g'), replacement);
 };
+String.prototype.formatUnicorn = String.prototype.formatUnicorn ||
+function () {
+    "use strict";
+    var str = this.toString();
+    if (arguments.length) {
+        var t = typeof arguments[0];
+        var key;
+        var args = ("string" === t || "number" === t) ?
+            Array.prototype.slice.call(arguments)
+            : arguments[0];
+
+        for (key in args) {
+            str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
+        }
+    }
+
+    return str;
+};
+
+/**
+ * Funció recursiva que crea un objecte similar a la sidebar
+ * @param  {String} path 
+ * @return {String}         '<bold><thing>new_tal</bold></thing>'
+ */
 const createSidebar=(file_path)=>{
     let name_of_file = file_path.match(/(?:[^\/\\](?!(\/|\\)))+$/gim)
     if (name_of_file==null) {name_of_file = "./"}
@@ -23,13 +47,11 @@ const createSidebar=(file_path)=>{
 }
 const printSidebar=(sidebar,insertSubroutingPath=null,subroutingObj=null,root='./',deep=1)=>{
   if (typeof sidebar === 'string'|| typeof sidebar === 'boolean' || sidebar[0]=='_') return null
-  //if (typeof sidebar === 'string') {return "-  ["+sidebar+"]("+sidebar+")"}
   let key = Object.keys(sidebar)[0]
-  //if(sidebar[key].includes('README.md')) {return "-  ["+key+"]("+ path.join(root, 'README.md')+")"}
   // skips first one (is ./)
 	let new_root =deep==1?root:path.join(root,key)
 	let extraString = []
-	//evitar noms amb coses rares
+	// evitar noms amb coses rares
 	let url = require('querystring').escape(path.join(new_root, 'README.md')).replaceAll("%5C","/")
 	
 	if (new_root==insertSubroutingPath){
@@ -37,7 +59,7 @@ const printSidebar=(sidebar,insertSubroutingPath=null,subroutingObj=null,root='.
 	}
 	let final_tema = sidebar[key].flatMap((value)=>printSidebar(value,insertSubroutingPath,subroutingObj,new_root, deep+1)).filter((item)=>item)
 	final_tema = [...final_tema, ...extraString]
-  //console.log('fills de ',new_root,final_tema)
+  
   let prefix ='  '
 	let return_val = ["- ["+key+"]("+url+")",...final_tema.map((item)=>prefix+item)]
   return return_val//"- ["+key+"]("+url+")"+'\n'+extraString+(final_tema.join(separador=prefix))
@@ -110,24 +132,7 @@ const getDocumentationDiagram = (index, file_id)=>{
 	})
 }
 //<h2><a  id="${diagram_id}" class="anchor" href="#${diagram_id}"> ${title} </a></h2>
-String.prototype.formatUnicorn = String.prototype.formatUnicorn ||
-function () {
-    "use strict";
-    var str = this.toString();
-    if (arguments.length) {
-        var t = typeof arguments[0];
-        var key;
-        var args = ("string" === t || "number" === t) ?
-            Array.prototype.slice.call(arguments)
-            : arguments[0];
 
-        for (key in args) {
-            str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
-        }
-    }
-
-    return str;
-};
 function createDocumentation(index, file_path, flowio_path, sidebar_obj, depth=1){
 	if (path.basename(file_path)[0]=='_') return
 	if(!fs.existsSync(path.join(flowio_path,'./_docs'))) fs.mkdirSync(path.join(flowio_path,'./_docs'));
@@ -159,7 +164,6 @@ function createDocumentation(index, file_path, flowio_path, sidebar_obj, depth=1
 					fs.writeFileSync(link, logic_html)
 					return diagram.doc.formatUnicorn({link_diagram_iframe_flowio:link})
 				})
-				console.log(diagrams)
 				//console.log("EI",file_diagrams, diagrams)
 				//crear subrouting per fitxers
 				let titles = file_diagrams.reduce((acc, item)=>{

@@ -22,7 +22,15 @@
     "electron-builder": "^20.40.2"
   },
   "build": {
-    "appId": "com.example.app"
+    "appId": "com.example.app",
+    "win": {
+      "target": ["nsis","portable"]
+    }    
   },
-  "dependencies": {}
+  
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "pako": "^1.0.10",
+    "xml2js": "^0.4.19"
+  }
 }
