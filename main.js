@@ -5,9 +5,6 @@ const path = require('path')
 const flowio = require('./flowio-core/flowio')
 const flowio_docs = require('./flowio-docs')
 
-const PATH_APP_NODE_MODULES = path.join(__dirname, 'flowio-core', 'node_modules')
-console.log(PATH_APP_NODE_MODULES)
-require('module').globalPaths.push(PATH_APP_NODE_MODULES)
 app.setPath('userData',path.join(app.getPath('appData'),'flowio'))
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -61,7 +58,7 @@ function createWindow () {
   // and load the index.html of the app.
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
  /* let view = new BrowserView()
   mainWindow.setBrowserView(view)
   view.setBounds({ x: 0, y: 0, width: 300, height: 300 })

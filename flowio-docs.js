@@ -93,8 +93,7 @@ const getHTMLName = (title, id)=>{
 }
 const getDocumentationDiagram = (index, file_id)=>{
 	if (!index[file_id]) return
-	let logic_from_diagram = flowio.extractLogicFromFunction(index, file_id,true, true,1)
-	flowio.extractLogicFromFunction(index, file_id)
+	let logic_from_diagram = flowio.extractLogicFromFunction(index, file_id,true, true,0)
 	return Promise.all([logic_from_diagram,drawionode.readDiagram(index[file_id])]).then((data)=>{
 		// logic from function
 		let func_extraction = data[0]
