@@ -2,6 +2,12 @@
 
 Aquesta és la guia per a desenvolupadors del repositori flowio-docs. 
 
+https://bernatesquirol.github.com/flowio-docs
+
+Aquest projecte inclou:
+
+[flowio-desktop](https://github.com/bernatesquirol/flowio-desktop) [flowio-core](https://github.com/bernatesquirol/flowio-core) [flowio](https://github.com/bernatesquirol/flowio) [flowio-docs](https://github.com/bernatesquirol/flowio-docs/) 
+
 ## Dependències 🚩
 
 - `electron`
